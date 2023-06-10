@@ -5,12 +5,12 @@ import os
 import sys
 from subprocess import run
 
-
 # App Class
 
 class App(object):
 
     def __init__(self):
+        field_names = ["id", "name", "user", "folder"]
         field_names_string = ",".join(field_names)
         p = run(
             ["rbw", "list", "--fields", field_names_string],
@@ -36,9 +36,8 @@ class App(object):
         f.write(f"rbw get {self.matches[index]['id']}")
         f.close()
 
-        os.system(f"rbw get {self.matches[index]['id']} | tr -d '\\n' | xclip -selection clipboard -in")
+        os.system(f"copyq disable && rbw get {self.matches[index]['id']} | tr -d '\\n' | xclip -selection clipboard -in && copyq enable")
         os.system(f'/usr/bin/notify-send --icon=gtk-authentication "Password" "Copied {self.matches[index]["name"]} - {self.matches[index]["user"]}  to clipboard"')
-        os.system(f"rbw get {self.matches[index]['id']} | tr -d '\\n' | xclip -selection clipboard -in")
 
         sys.stdout.write('"Close"\n')
         sys.stdout.flush()
